@@ -6,17 +6,19 @@ from PIL import Image
 import tensorflow as tf
 
 app = Flask(__name__)
-UPLOAD_FOLDER = "uploads"
+
+UPLOAD_FOLDER = "/tmp/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
 CLASS_NAMES = ['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']
 IMG_SIZE = (224, 224)
 
 model = None
 try:
-   model = tf.keras.models.load_model("waste_classifier.h5", compile=False, safe_mode=False)
+    model = tf.keras.models.load_model("waste_classifier.h5", compile=False, safe_mode=False)
     print("✅ Model loaded!")
 except Exception as e:
     print(f"❌ Model error: {e}")
