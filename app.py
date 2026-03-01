@@ -23,7 +23,7 @@ IMG_SIZE = (224, 224)
 model = None
 try:
     from tensorflow.keras.models import load_model
-    model = load_model("waste_classifier.h5")
+   model = load_model(os.path.join(os.path.dirname(os.path.abspath(__file__)), "waste_classifier.h5"))
     print("✅ Model loaded!")
 except Exception as e:
     print(f"❌ Model error: {e}")
