@@ -1,4 +1,10 @@
 import os
+import gc
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["TF_NUM_INTEROP_THREADS"] = "1"
+os.environ["TF_NUM_INTRAOP_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "1"
+
 import numpy as np
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
@@ -18,7 +24,10 @@ IMG_SIZE = (224, 224)
 
 model = None
 try:
+    tf.config.threading.set_inter_op_parallelism_threads(1)
+    tf.config.threading.set_intra_op_parallelism_threads(1)
     model = tf.keras.models.load_model("waste_classifier.h5", compile=False, safe_mode=False)
+    model.trainable = False
     print("✅ Model loaded!")
 except Exception as e:
     print(f"❌ Model error: {e}")
@@ -49,7 +58,9 @@ def predict():
     file.save(filepath)
     try:
         img_array = preprocess(filepath)
-        preds = model.predict(img_array, verbose=0)[0]
+        with tf.device('/CPU:0'):
+            preds = model(img_array, training=False).numpy()[0]
+        gc.collect()
         top_idx = int(np.argmax(preds))
         top_label = CLASS_NAMES[top_idx]
         top_conf = float(preds[top_idx])
@@ -67,6 +78,7 @@ def predict():
     finally:
         if os.path.exists(filepath):
             os.remove(filepath)
+        gc.collect()
 
 @app.errorhandler(413)
 def too_large(e):
