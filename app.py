@@ -3,6 +3,7 @@ import numpy as np
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
 from PIL import Image
+import tensorflow as tf
 
 app = Flask(__name__)
 
@@ -17,7 +18,6 @@ IMG_SIZE = (224, 224)
 
 model = None
 try:
-    import tensorflow as tf
     model = tf.keras.models.load_model("waste_classifier.h5", compile=False)
     print("✅ Model loaded!")
 except Exception as e:
