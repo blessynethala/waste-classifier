@@ -16,7 +16,7 @@ IMG_SIZE = (224, 224)
 
 model = None
 try:
-    model = tf.keras.models.load_model("waste_classifier.h5", compile=False)
+   model = tf.keras.models.load_model("waste_classifier.h5", compile=False, safe_mode=False)
     print("✅ Model loaded!")
 except Exception as e:
     print(f"❌ Model error: {e}")
