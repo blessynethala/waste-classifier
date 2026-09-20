@@ -33,6 +33,7 @@ def set_background(path):
         }}
         .block-container {{
             background: rgba(255,255,255,0.96);
+            backdrop-filter: blur (14px);
             padding: 2rem;
             border-radius: 16px;
         }}
