@@ -1,3 +1,4 @@
+import base64
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -10,8 +11,38 @@ from PIL import Image
 CLASS_NAMES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 IMG_SIZE = (224, 224)
 MODEL_PATH = "waste_classifier.h5"
+BACKGROUND_PATH = "background.jpg"
 
 st.set_page_config(page_title="Smart Waste Classifier", page_icon="♻️")
+
+
+def set_background(path):
+    if not os.path.exists(path):
+        return
+    with open(path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)),
+                              url("data:image/jpeg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        .block-container {{
+            background: rgba(255,255,255,0.88);
+            padding: 2rem;
+            border-radius: 16px;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+set_background(BACKGROUND_PATH)
 
 
 @st.cache_resource
