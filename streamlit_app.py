@@ -32,9 +32,12 @@ def set_background(path):
             background-attachment: fixed;
         }}
         .block-container {{
-            background: rgba(255,255,255,0.88);
+            background: rgba(255,255,255,0.96);
             padding: 2rem;
             border-radius: 16px;
+        }}
+            header[data-testid="stHeader"] {{
+                background: transparent;
         }}
         </style>
         """,
